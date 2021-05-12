@@ -14,5 +14,7 @@ describe('SignUp Controller', () => {
     }
     const httpResponse = sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body).toEqual(new Error('Missing param: name')) // toBe is not used in this case bacause when the comparison is objects, it also checks the reference, thus it will fail.
+    // toEqual checks only the value
   })
 })
