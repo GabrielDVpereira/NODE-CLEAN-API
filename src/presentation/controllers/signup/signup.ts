@@ -48,11 +48,16 @@ export class SignUpController implements Controller { // by making the class imp
 
       // at this point, all validations passed, so we create the user with the dependency injection
 
-      this.addAccount.add({
+      const account = this.addAccount.add({
         name,
         email,
         password
       })
+
+      return {
+        statusCode: 200,
+        body: account
+      }
     } catch (error) {
       return serverError()
     }
