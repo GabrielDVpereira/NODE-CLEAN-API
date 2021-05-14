@@ -14,12 +14,15 @@ import {
   InvalidParamError,
   MissingParamError
 } from '../errors'
+import { AddAccount } from '../../domain/usecases/add-account'
 
 export class SignUpController implements Controller { // by making the class implement a controller interface, we ensure that all controllers will follow the controller methods we define
   private readonly emailValidator: EmailValidator // private - it's not acessible outside the class; read-only - it cannot be reasigned
+  private readonly addAccount: AddAccount
 
-  constructor (emailValidator: EmailValidator) { // dependecy inversion (Inversion of Control) as well as dependency injection. we have controll of the emailValidator dependencies (methods) by injecting it into the SignUpController class
+  constructor (emailValidator: EmailValidator, addAccount: AddAccount) { // dependecy inversion (Inversion of Control) as well as dependency injection. we have controll of the emailValidator dependencies (methods) by injecting it into the SignUpController class
     this.emailValidator = emailValidator
+    this.addAccount = addAccount
   }
 
   handle (httpRequest: HttpRequest): HttpResponse {
@@ -32,7 +35,7 @@ export class SignUpController implements Controller { // by making the class imp
         }
       }
 
-      const { email, password, passwordConfirmation } = httpRequest.body
+      const { name, email, password, passwordConfirmation } = httpRequest.body
 
       if (password !== passwordConfirmation) {
         return badRequest(new InvalidParamError('passwordConfirmation'))
@@ -42,6 +45,14 @@ export class SignUpController implements Controller { // by making the class imp
       if (!isValid) {
         return badRequest(new InvalidParamError('email'))
       }
+
+      // at this point, all validations passed, so we create the user with the dependency injection
+
+      this.addAccount.add({
+        name,
+        email,
+        password
+      })
     } catch (error) {
       return serverError()
     }
