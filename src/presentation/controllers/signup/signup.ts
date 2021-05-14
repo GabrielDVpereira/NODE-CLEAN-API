@@ -8,6 +8,7 @@ import {
 
 import {
   badRequest,
+  ok,
   serverError
 } from '../../helpers/http-helpers'
 
@@ -54,10 +55,7 @@ export class SignUpController implements Controller { // by making the class imp
         password
       })
 
-      return {
-        statusCode: 200,
-        body: account
-      }
+      return ok(account)
     } catch (error) {
       return serverError()
     }
