@@ -195,6 +195,28 @@ describe('SignUp Controller', () => {
     // toEqual checks only the value
   })
 
+  test('Should return 500 addAccount throws', () => {
+    const { addAccountStub, sut } = makeSut()
+
+    jest.spyOn(addAccountStub, 'add').mockImplementationOnce(() => { // we change the implementation of the class method "add"
+      throw new Error()
+    })
+
+    const httpRequest = {
+      body: {
+        email: 'any_any_email@test.com',
+        name: 'any_name',
+        password: 'any_password',
+        passwordConfirmation: 'any_password'
+
+      }
+    }
+    const httpResponse = sut.handle(httpRequest)
+    expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body).toEqual(new ServerError()) // toBe is not used in this case bacause when the comparison is objects, it also checks the reference, thus it will fail.
+    // toEqual checks only the value
+  })
+
   test('Should call addAccount with correct values', () => {
     const { sut, addAccountStub } = makeSut() // system under test
 
