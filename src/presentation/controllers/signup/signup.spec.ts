@@ -32,7 +32,7 @@ const makeEmailValidator = (): EmailValidator => {
 
 const makeAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount { // stub is a mock for a test, we always return the value we expect from a method. We also implements a interface to ensure that the validator respects the protocol for validator
-    add (account: AddAccountModel): AccountModel { // AccountModel will have more fields than AddAccountModel like _id, name, createdAt and so on
+    async add (account: AddAccountModel): Promise<AccountModel> { // AccountModel will have more fields than AddAccountModel like _id, name, createdAt and so on
       const fakeAccount = {
         id: 'valid_id',
         name: 'valid_name',
@@ -41,7 +41,7 @@ const makeAddAccount = (): AddAccount => {
 
       }
 
-      return fakeAccount
+      return await new Promise(resolve => resolve(fakeAccount))
     }
   }
 
@@ -49,7 +49,7 @@ const makeAddAccount = (): AddAccount => {
 }
 
 describe('SignUp Controller', () => {
-  test('Should return 400 if no name is provided', () => {
+  test('Should return 400 if no name is provided', async () => {
     const { sut } = makeSut() // system under test
 
     const httpRequest = {
@@ -60,13 +60,13 @@ describe('SignUp Controller', () => {
 
       }
     }
-    const httpResponse = sut.handle(httpRequest)
+    const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new MissingParamError('name')) // toBe is not used in this case bacause when the comparison is objects, it also checks the reference, thus it will fail.
     // toEqual checks only the value
   })
 
-  test('Should return 400 if no email is provided', () => {
+  test('Should return 400 if no email is provided', async () => {
     const { sut } = makeSut() // system under test
 
     const httpRequest = {
@@ -77,13 +77,13 @@ describe('SignUp Controller', () => {
 
       }
     }
-    const httpResponse = sut.handle(httpRequest)
+    const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new MissingParamError('email')) // toBe is not used in this case bacause when the comparison is objects, it also checks the reference, thus it will fail.
     // toEqual checks only the value
   })
 
-  test('Should return 400 if no password is provided', () => {
+  test('Should return 400 if no password is provided', async () => {
     const { sut } = makeSut() // system under test
 
     const httpRequest = {
@@ -94,13 +94,13 @@ describe('SignUp Controller', () => {
 
       }
     }
-    const httpResponse = sut.handle(httpRequest)
+    const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new MissingParamError('password')) // toBe is not used in this case bacause when the comparison is objects, it also checks the reference, thus it will fail.
     // toEqual checks only the value
   })
 
-  test('Should return 400 if no passwordConfirmation is provided', () => {
+  test('Should return 400 if no passwordConfirmation is provided', async () => {
     const { sut } = makeSut() // system under test
 
     const httpRequest = {
@@ -111,13 +111,13 @@ describe('SignUp Controller', () => {
 
       }
     }
-    const httpResponse = sut.handle(httpRequest)
+    const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new MissingParamError('passwordConfirmation')) // toBe is not used in this case bacause when the comparison is objects, it also checks the reference, thus it will fail.
     // toEqual checks only the value
   })
 
-  test('Should return 400 if passwordConfirmation fails', () => {
+  test('Should return 400 if passwordConfirmation fails', async () => {
     const { sut } = makeSut() // system under test
 
     const httpRequest = {
@@ -128,13 +128,13 @@ describe('SignUp Controller', () => {
         passwordConfirmation: 'invalid_password'
       }
     }
-    const httpResponse = sut.handle(httpRequest)
+    const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new InvalidParamError('passwordConfirmation')) // toBe is not used in this case bacause when the comparison is objects, it also checks the reference, thus it will fail.
     // toEqual checks only the value
   })
 
-  test('Should return 400 if an invalid email is provided', () => {
+  test('Should return 400 if an invalid email is provided', async () => {
     const { sut, emailValidatorStub } = makeSut() // system under test
 
     jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false) // we use jest to mock the return of the method "isValid" from the emailValidatorStub obj to false
@@ -148,13 +148,13 @@ describe('SignUp Controller', () => {
 
       }
     }
-    const httpResponse = sut.handle(httpRequest)
+    const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new InvalidParamError('email')) // toBe is not used in this case bacause when the comparison is objects, it also checks the reference, thus it will fail.
     // toEqual checks only the value
   })
 
-  test('Should call email validator with correct email ', () => {
+  test('Should call email validator with correct email ', async () => {
     const { sut, emailValidatorStub } = makeSut() // system under test
 
     const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid') // we capture the return of the call of isValid method
@@ -168,12 +168,12 @@ describe('SignUp Controller', () => {
 
       }
     }
-    sut.handle(httpRequest)
+    await sut.handle(httpRequest)
     expect(isValidSpy).toHaveBeenCalledWith('any_any_email@test.com') // we check if the isValidSpy return has been called with the given value
     // toEqual checks only the value
   })
 
-  test('Should return 500 emailValidator throws', () => {
+  test('Should return 500 emailValidator throws', async () => {
     const { emailValidatorStub, sut } = makeSut()
 
     jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => { // we change the implementation of the class method "isValid"
@@ -189,17 +189,17 @@ describe('SignUp Controller', () => {
 
       }
     }
-    const httpResponse = sut.handle(httpRequest)
+    const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError()) // toBe is not used in this case bacause when the comparison is objects, it also checks the reference, thus it will fail.
     // toEqual checks only the value
   })
 
-  test('Should return 500 addAccount throws', () => {
+  test('Should return 500 addAccount throws', async () => {
     const { addAccountStub, sut } = makeSut()
 
-    jest.spyOn(addAccountStub, 'add').mockImplementationOnce(() => { // we change the implementation of the class method "add"
-      throw new Error()
+    jest.spyOn(addAccountStub, 'add').mockImplementationOnce(async () => { // we change the implementation of the class method "add"
+      return await new Promise((resolve, reject) => reject(new Error())) // the method is async, so it's correct to make it return a promise
     })
 
     const httpRequest = {
@@ -211,13 +211,13 @@ describe('SignUp Controller', () => {
 
       }
     }
-    const httpResponse = sut.handle(httpRequest)
+    const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError()) // toBe is not used in this case bacause when the comparison is objects, it also checks the reference, thus it will fail.
     // toEqual checks only the value
   })
 
-  test('Should call addAccount with correct values', () => {
+  test('Should call addAccount with correct values', async () => {
     const { sut, addAccountStub } = makeSut() // system under test
 
     const addSpy = jest.spyOn(addAccountStub, 'add') // we capture the return of the call of isValid method
@@ -231,7 +231,7 @@ describe('SignUp Controller', () => {
 
       }
     }
-    sut.handle(httpRequest)
+    await sut.handle(httpRequest)
     expect(addSpy).toHaveBeenCalledWith({
       email: 'any_any_email@test.com',
       name: 'any_name',
@@ -240,7 +240,7 @@ describe('SignUp Controller', () => {
     // toEqual checks only the value
   })
 
-  test('Should return 200 if a valid data is provided', () => {
+  test('Should return 200 if a valid data is provided', async () => {
     const { sut } = makeSut() // system under test
 
     const httpRequest = {
@@ -252,7 +252,7 @@ describe('SignUp Controller', () => {
 
       }
     }
-    const httpResponse = sut.handle(httpRequest)
+    const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(200)
     expect(httpResponse.body).toEqual(
       {

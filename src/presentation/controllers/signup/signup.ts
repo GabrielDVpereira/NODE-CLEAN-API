@@ -26,7 +26,7 @@ export class SignUpController implements Controller { // by making the class imp
     this.addAccount = addAccount
   }
 
-  handle (httpRequest: HttpRequest): HttpResponse {
+  async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const requiredFiels = ['name', 'email', 'password', 'passwordConfirmation']
 
@@ -49,7 +49,7 @@ export class SignUpController implements Controller { // by making the class imp
 
       // at this point, all validations passed, so we create the user with the dependency injection
 
-      const account = this.addAccount.add({
+      const account = await this.addAccount.add({
         name,
         email,
         password

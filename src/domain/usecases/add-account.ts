@@ -7,5 +7,5 @@ export interface AddAccountModel {
 }
 
 export interface AddAccount {
-  add: (account: AddAccountModel) => AccountModel // AccountModel is database related, so we dont use it inside domain
+  add: (account: AddAccountModel) => Promise<AccountModel> // AccountModel is database related, so we dont use it inside domain
 }
