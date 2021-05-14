@@ -97,6 +97,23 @@ describe('SignUp Controller', () => {
     // toEqual checks only the value
   })
 
+  test('Should return 400 if passwordConfirmation fails', () => {
+    const { sut } = makeSut() // system under test
+
+    const httpRequest = {
+      body: {
+        email: 'any_email@test.com',
+        name: 'any_name',
+        password: 'any_password',
+        passwordConfirmation: 'invalid_password'
+      }
+    }
+    const httpResponse = sut.handle(httpRequest)
+    expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body).toEqual(new InvalidParamError('passwordConfirmation')) // toBe is not used in this case bacause when the comparison is objects, it also checks the reference, thus it will fail.
+    // toEqual checks only the value
+  })
+
   test('Should return 400 if an invalid email is provided', () => {
     const { sut, emailValidatorStub } = makeSut() // system under test
 
