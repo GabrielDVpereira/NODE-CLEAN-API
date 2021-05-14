@@ -1,10 +1,9 @@
 import { MissingParamError } from '../errors/missing-param-error'
-import { badRequest } from '../helpers/http-helpers'
+import { badRequest, serverError } from '../helpers/http-helpers'
 import { HttpRequest, HttpResponse } from '../protocols/http'
 import { Controller } from '../protocols/controller'
 import { EmailValidator } from '../protocols/email-validator'
 import { InvalidParamError } from '../errors/invalid-param-error'
-import { ServerError } from '../errors/server-error'
 
 export class SignUpController implements Controller { // by making the class implement a controller interface, we ensure that all controllers will follow the controller methods we define
   private readonly emailValidator: EmailValidator // private - it's not acessible outside the class; read-only - it cannot be reasigned
@@ -28,10 +27,7 @@ export class SignUpController implements Controller { // by making the class imp
         return badRequest(new InvalidParamError('email'))
       }
     } catch (error) {
-      return {
-        statusCode: 500,
-        body: new ServerError()
-      }
+      return serverError()
     }
   }
 }
