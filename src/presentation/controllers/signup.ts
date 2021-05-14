@@ -8,7 +8,7 @@ import { InvalidParamError } from '../errors/invalid-param-error'
 export class SignUpController implements Controller { // by making the class implement a controller interface, we ensure that all controllers will follow the controller methods we define
   private readonly emailValidator: EmailValidator // private - it's not acessible outside the class; read-only - it cannot be reasigned
 
-  constructor (emailValidator: EmailValidator) {
+  constructor (emailValidator: EmailValidator) { // dependecy inversion (Inversion of Control) as well as dependency injection. we have controll of the emailValidator dependencies (methods) by injecting it into the SignUpController class
     this.emailValidator = emailValidator
   }
 
