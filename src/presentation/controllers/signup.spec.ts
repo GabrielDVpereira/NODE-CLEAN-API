@@ -111,4 +111,23 @@ describe('SignUp Controller', () => {
     expect(httpResponse.body).toEqual(new InvalidParamError('email')) // toBe is not used in this case bacause when the comparison is objects, it also checks the reference, thus it will fail.
     // toEqual checks only the value
   })
+
+  test('Should call email validator with correct email ', () => {
+    const { sut, emailValidatorStub } = makeSut() // system under test
+
+    const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid') // we capture the return of the call of isValid method
+
+    const httpRequest = {
+      body: {
+        email: 'any_any_email@test.com',
+        name: 'any_name',
+        password: 'any_password',
+        passwordConfirmation: 'any_password'
+
+      }
+    }
+    sut.handle(httpRequest)
+    expect(isValidSpy).toHaveBeenCalledWith('any_any_email@test.com') // we check if the isValidSpy return has been called with the given value
+    // toEqual checks only the value
+  })
 })
