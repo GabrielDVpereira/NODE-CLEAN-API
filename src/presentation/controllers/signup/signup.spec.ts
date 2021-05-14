@@ -239,4 +239,30 @@ describe('SignUp Controller', () => {
     }) // we check if the isValidSpy return has been called with the given value
     // toEqual checks only the value
   })
+
+  test('Should return 200 if a valid data is provided', () => {
+    const { sut } = makeSut() // system under test
+
+    const httpRequest = {
+      body: {
+        email: 'valid_email@test.com',
+        name: 'valid_name',
+        password: 'valid_password',
+        passwordConfirmation: 'valid_password'
+
+      }
+    }
+    const httpResponse = sut.handle(httpRequest)
+    expect(httpResponse.statusCode).toBe(200)
+    expect(httpResponse.body).toEqual(
+      {
+        id: 'valid_id',
+        email: 'valid_email@email.com',
+        name: 'valid_name',
+        password: 'valid_password'
+
+      }
+    ) // toBe is not used in this case bacause when the comparison is objects, it also checks the reference, thus it will fail.
+    // toEqual checks only the value
+  })
 })
