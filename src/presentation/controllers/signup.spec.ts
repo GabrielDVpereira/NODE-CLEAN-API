@@ -8,7 +8,7 @@ interface SutTypes {
   emailValidatorStub: EmailValidator
 }
 
-const makeSut = (): SutTypes => { // by moving the instanciation to a new class, we ensure that if we neet to pass a new dependency to the SignUpController(), we change in one place
+const makeSut = (): SutTypes => { // factory to implement only once the class instancication
   const emailValidatorStub = makeEmailValidator()
   const sut = new SignUpController(emailValidatorStub) // dependency injection
 
