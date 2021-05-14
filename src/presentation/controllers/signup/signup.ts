@@ -2,19 +2,19 @@ import {
   EmailValidator,
   Controller,
   HttpRequest,
-  HttpResponse
-} from '../protocols'
+  HttpResponse,
+  AddAccount
+} from './signup-protocols'
 
 import {
   badRequest,
   serverError
-} from '../helpers/http-helpers'
+} from '../../helpers/http-helpers'
 
 import {
   InvalidParamError,
   MissingParamError
-} from '../errors'
-import { AddAccount } from '../../domain/usecases/add-account'
+} from '../../errors'
 
 export class SignUpController implements Controller { // by making the class implement a controller interface, we ensure that all controllers will follow the controller methods we define
   private readonly emailValidator: EmailValidator // private - it's not acessible outside the class; read-only - it cannot be reasigned
