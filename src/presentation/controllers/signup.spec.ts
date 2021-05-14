@@ -2,19 +2,24 @@ import { SignUpController } from './signup'
 import { EmailValidator } from '../protocols'
 
 import { InvalidParamError, MissingParamError, ServerError } from '../errors'
+import { AddAccount, AddAccountModel } from '../../domain/usecases/add-account'
+import { AccountModel } from '../../domain/models/account'
 
 interface SutTypes {
   sut: SignUpController
   emailValidatorStub: EmailValidator
+  addAccountStub: AddAccount
 }
 
 const makeSut = (): SutTypes => { // factory to implement only once the class instancication
   const emailValidatorStub = makeEmailValidator()
-  const sut = new SignUpController(emailValidatorStub) // dependency injection
+  const addAccountStub = makeAddAccount()
+  const sut = new SignUpController(emailValidatorStub, addAccountStub) // dependency injection
 
   return {
     sut,
-    emailValidatorStub
+    emailValidatorStub,
+    addAccountStub
   }
 }
 
@@ -26,6 +31,24 @@ const makeEmailValidator = (): EmailValidator => {
   }
 
   return new EmailValidatorStub()
+}
+
+const makeAddAccount = (): AddAccount => {
+  class AddAccountStub implements AddAccount { // stub is a mock for a test, we always return the value we expect from a method. We also implements a interface to ensure that the validator respects the protocol for validator
+    add (account: AddAccountModel): AccountModel { // AccountModel will have more fields than AddAccountModel like _id, name, createdAt and so on
+      const fakeAccount = {
+        id: 'valid_id',
+        name: 'valid_name',
+        email: 'valid_email@email.com',
+        password: 'valid_password'
+
+      }
+
+      return fakeAccount
+    }
+  }
+
+  return new AddAccountStub()
 }
 
 describe('SignUp Controller', () => {
@@ -172,6 +195,29 @@ describe('SignUp Controller', () => {
     const httpResponse = sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError()) // toBe is not used in this case bacause when the comparison is objects, it also checks the reference, thus it will fail.
+    // toEqual checks only the value
+  })
+
+  test('Should call addAccount with correct values', () => {
+    const { sut, addAccountStub } = makeSut() // system under test
+
+    const addSpy = jest.spyOn(addAccountStub, 'add') // we capture the return of the call of isValid method
+
+    const httpRequest = {
+      body: {
+        email: 'any_any_email@test.com',
+        name: 'any_name',
+        password: 'any_password',
+        passwordConfirmation: 'any_password'
+
+      }
+    }
+    sut.handle(httpRequest)
+    expect(addSpy).toHaveBeenCalledWith({
+      email: 'any_any_email@test.com',
+      name: 'any_name',
+      password: 'any_password'
+    }) // we check if the isValidSpy return has been called with the given value
     // toEqual checks only the value
   })
 })
