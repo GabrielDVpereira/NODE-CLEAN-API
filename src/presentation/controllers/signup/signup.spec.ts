@@ -195,16 +195,16 @@ describe('SignUp Controller', () => {
     // toEqual checks only the value
   })
 
-  test('Should return 500 addAccount throws', async () => {
+  test('Should return 500 if addAccount throws', async () => {
     const { addAccountStub, sut } = makeSut()
 
     jest.spyOn(addAccountStub, 'add').mockImplementationOnce(async () => { // we change the implementation of the class method "add"
-      return await new Promise((resolve, reject) => reject(new Error())) // the method is async, so it's correct to make it return a promise
+      return await new Promise((resolve, reject) => reject(new Error())) // the original method is async, so it's correct to make it return a promise
     })
 
     const httpRequest = {
       body: {
-        email: 'any_any_email@test.com',
+        email: 'any_email@test.com',
         name: 'any_name',
         password: 'any_password',
         passwordConfirmation: 'any_password'
