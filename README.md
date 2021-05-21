@@ -13,3 +13,4 @@ In order to standard the development, a few dependencies are used:
 - jest-mongodb: generates a in memory mongodb for tests
 - Express: build a http server
 - Sucrase: Parse TS to JS (server hosts and browsers only understands js)
+-fast-glob: file manipulation
