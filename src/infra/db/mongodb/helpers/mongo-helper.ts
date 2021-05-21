@@ -13,5 +13,10 @@ export const MongoHelper = {
 
   getCollection (name: string): Collection {
     return this.client.db().collection(name)
+  },
+
+  map (collection): any {
+    const { _id, ...collectionWithoutId } = collection // we define our id to have only "id" and not "_id". So we will remove the _id and insert the new id
+    return { ...collectionWithoutId, id: _id }
   }
 }

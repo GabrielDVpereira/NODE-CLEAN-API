@@ -10,8 +10,6 @@ export class AccountMongoRepository implements AddAccountRepository {
 
     const account = result.ops[0] // the result is in the ops array. Since we inserted one, theres only one position
 
-    const { _id, ...accountWithoutId } = account // we define our id to have only "id" and not "_id". So we will remove the _id and insert the new id
-
-    return { ...accountWithoutId, id: _id }
+    return MongoHelper.map(account)
   }
 }
