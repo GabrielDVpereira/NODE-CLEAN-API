@@ -1,6 +1,8 @@
 import { MongoHelper } from '../helpers/mongo-helper'
 import { AccountMongoRepository } from './account'
 
+// since we are testing a db integrated with a class, we cannot mock the mongodb functions because it's too painful, so we use a offline db helper and test only the sucess case
+
 describe('Account Mongo Repository', () => {
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL) // jest-mongodb sets a db url for us in the env
