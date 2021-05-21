@@ -11,3 +11,5 @@ In order to standard the development, a few dependencies are used:
 - typescript: Superset of javascrit to include types and newest javascrit features in our code.
 - eslint: Linting to ensure code pattern. 
 - jest-mongodb: generates a in memory mongodb for tests
+- Express: build a http server
+- Sucrase: Parse TS to JS (server hosts and browsers only understands js)
