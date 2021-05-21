@@ -2,3 +2,4 @@ node_modules
 dist
 *.lock
 coverage
+globalConfig.json
