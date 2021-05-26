@@ -3,3 +3,4 @@ dist
 *.lock
 coverage
 globalConfig.json
+.git_old

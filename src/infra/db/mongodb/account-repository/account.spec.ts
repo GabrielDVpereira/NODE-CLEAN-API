@@ -12,7 +12,7 @@ describe('Account Mongo Repository', () => {
     await MongoHelper.disconnect()
   })
   beforeEach(async () => {
-    const accountCollection = MongoHelper.getCollection('accounts')
+    const accountCollection = await MongoHelper.getCollection('accounts')
     await accountCollection.deleteMany({}) // cleaning the collection before each test
   })
 

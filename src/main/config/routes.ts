@@ -1,5 +1,5 @@
 import { Express, Router } from 'express'
-import fg from 'fast-glob'
+import fg from 'fast-glob' // file system library
 
 export default (app: Express): void => {
   const router = Router()
