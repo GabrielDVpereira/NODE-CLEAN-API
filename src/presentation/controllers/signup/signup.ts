@@ -14,8 +14,7 @@ import {
 } from '../../helpers/http-helpers'
 
 import {
-  InvalidParamError,
-  MissingParamError
+  InvalidParamError
 } from '../../errors'
 
 export class SignUpController implements Controller { // by making the class implement a controller interface, we ensure that all controllers will follow the controller methods we define
@@ -34,13 +33,6 @@ export class SignUpController implements Controller { // by making the class imp
       const error = this.validation.validate(httpRequest.body)
       if (error) {
         return badRequest(error)
-      }
-      const requiredFiels = ['name', 'email', 'password', 'passwordConfirmation']
-
-      for (const field of requiredFiels) {
-        if (!httpRequest.body[field]) {
-          return badRequest(new MissingParamError(field))
-        }
       }
 
       const { name, email, password, passwordConfirmation } = httpRequest.body

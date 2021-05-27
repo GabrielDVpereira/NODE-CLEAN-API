@@ -75,66 +75,6 @@ const makeFakeRequest = (): HttpRequest => ({
 })
 
 describe('SignUp Controller', () => {
-  test('Should return 400 if no name is provided', async () => {
-    const { sut } = makeSut() // system under test
-
-    const httpRequest = {
-      body: {
-        email: 'any_email@test.com',
-        password: 'any_password',
-        passwordConfirmation: 'any_password'
-
-      }
-    }
-    const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('name'))) // toBe is not used in this case bacause when the comparison is objects, it also checks the reference, thus it will fail.
-  })
-
-  test('Should return 400 if no email is provided', async () => {
-    const { sut } = makeSut() // system under test
-
-    const httpRequest = {
-      body: {
-        name: 'any_name',
-        password: 'any_password',
-        passwordConfirmation: 'any_password'
-
-      }
-    }
-    const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('email'))) // toBe is not used in this case bacause when the comparison is objects, it also checks the reference, thus it will fail.
-  })
-
-  test('Should return 400 if no password is provided', async () => {
-    const { sut } = makeSut() // system under test
-
-    const httpRequest = {
-      body: {
-        email: 'any_email@test.com',
-        name: 'any_name',
-        passwordConfirmation: 'any_password'
-
-      }
-    }
-    const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('password'))) // toBe is not used in this case bacause when the comparison is objects, it also checks the reference, thus it will fail.
-  })
-
-  test('Should return 400 if no passwordConfirmation is provided', async () => {
-    const { sut } = makeSut() // system under test
-
-    const httpRequest = {
-      body: {
-        email: 'any_email@test.com',
-        name: 'any_name',
-        password: 'any_password'
-
-      }
-    }
-    const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('passwordConfirmation'))) // toBe is not used in this case bacause when the comparison is objects, it also checks the reference, thus it will fail.
-  })
-
   test('Should return 400 if passwordConfirmation fails', async () => {
     const { sut } = makeSut() // system under test
 
