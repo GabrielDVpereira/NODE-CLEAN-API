@@ -1,5 +1,4 @@
 import {
-  EmailValidator,
   Controller,
   HttpRequest,
   HttpResponse,
@@ -13,17 +12,11 @@ import {
   serverError
 } from '../../helpers/http-helpers'
 
-import {
-  InvalidParamError
-} from '../../errors'
-
 export class SignUpController implements Controller { // by making the class implement a controller interface, we ensure that all controllers will follow the controller methods we define
-  private readonly emailValidator: EmailValidator // private - it's not acessible outside the class; read-only - it cannot be reasigned
-  private readonly addAccount: AddAccount
+  private readonly addAccount: AddAccount // private - it's not acessible outside the class; read-only - it cannot be reasigned
   private readonly validation: Validation
 
-  constructor (emailValidator: EmailValidator, addAccount: AddAccount, validation: Validation) { // dependecy inversion (Inversion of Control) as well as dependency injection. we have controll of the emailValidator dependencies (methods) by injecting it into the SignUpController class
-    this.emailValidator = emailValidator
+  constructor (addAccount: AddAccount, validation: Validation) { // dependecy inversion (Inversion of Control) as well as dependency injection. we have controll of the emailValidator dependencies (methods) by injecting it into the SignUpController class
     this.addAccount = addAccount
     this.validation = validation
   }
@@ -34,16 +27,7 @@ export class SignUpController implements Controller { // by making the class imp
       if (error) {
         return badRequest(error)
       }
-
       const { name, email, password } = httpRequest.body
-
-      const isValid = this.emailValidator.isValid(email)
-      if (!isValid) {
-        return badRequest(new InvalidParamError('email'))
-      }
-
-      // at this point, all validations passed, so we create the user with the dependency injection
-
       const account = await this.addAccount.add({
         name,
         email,
