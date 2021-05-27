@@ -3,7 +3,8 @@ import {
   Controller,
   HttpRequest,
   HttpResponse,
-  AddAccount
+  AddAccount,
+  Validation
 } from './signup-protocols'
 
 import {
@@ -20,14 +21,17 @@ import {
 export class SignUpController implements Controller { // by making the class implement a controller interface, we ensure that all controllers will follow the controller methods we define
   private readonly emailValidator: EmailValidator // private - it's not acessible outside the class; read-only - it cannot be reasigned
   private readonly addAccount: AddAccount
+  private readonly validation: Validation
 
-  constructor (emailValidator: EmailValidator, addAccount: AddAccount) { // dependecy inversion (Inversion of Control) as well as dependency injection. we have controll of the emailValidator dependencies (methods) by injecting it into the SignUpController class
+  constructor (emailValidator: EmailValidator, addAccount: AddAccount, validation: Validation) { // dependecy inversion (Inversion of Control) as well as dependency injection. we have controll of the emailValidator dependencies (methods) by injecting it into the SignUpController class
     this.emailValidator = emailValidator
     this.addAccount = addAccount
+    this.validation = validation
   }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
+      this.validation.validate(httpRequest.body)
       const requiredFiels = ['name', 'email', 'password', 'passwordConfirmation']
 
       for (const field of requiredFiels) {
