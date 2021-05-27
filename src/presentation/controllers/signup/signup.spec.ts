@@ -75,21 +75,6 @@ const makeFakeRequest = (): HttpRequest => ({
 })
 
 describe('SignUp Controller', () => {
-  test('Should return 400 if passwordConfirmation fails', async () => {
-    const { sut } = makeSut() // system under test
-
-    const httpRequest = {
-      body: {
-        email: 'any_email@test.com',
-        name: 'any_name',
-        password: 'any_password',
-        passwordConfirmation: 'invalid_password'
-      }
-    }
-    const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual(badRequest(new InvalidParamError('passwordConfirmation'))) // toBe is not used in this case bacause when the comparison is objects, it also checks the reference, thus it will fail.
-  })
-
   test('Should return 400 if an invalid email is provided', async () => {
     const { sut, emailValidatorStub } = makeSut() // system under test
 
