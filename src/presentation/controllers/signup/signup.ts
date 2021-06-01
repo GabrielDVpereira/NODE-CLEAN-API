@@ -10,7 +10,7 @@ import {
   badRequest,
   ok,
   serverError
-} from '../../helpers/http-helpers'
+} from '../../helpers/http/http-helpers'
 
 export class SignUpController implements Controller { // by making the class implement a controller interface, we ensure that all controllers will follow the controller methods we define
   private readonly addAccount: AddAccount // private - it's not acessible outside the class; read-only - it cannot be reasigned
