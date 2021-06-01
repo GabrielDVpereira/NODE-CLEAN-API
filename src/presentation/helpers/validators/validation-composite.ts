@@ -1,4 +1,4 @@
-import { Validation } from './validation'
+import { Validation } from '../../protocols/validation'
 
 // a composite recieves an array of dependecies that implements the same interface and itearate through this array to execute each one
 export class ValidationComposite implements Validation {
