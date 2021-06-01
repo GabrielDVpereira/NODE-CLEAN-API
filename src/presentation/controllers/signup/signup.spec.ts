@@ -101,12 +101,12 @@ describe('SignUp Controller', () => {
   test('Should call validator with correct value', async () => {
     const { sut, validationStub } = makeSut() // system under test
 
-    const validateSpy = jest.spyOn(validationStub, 'validate') // we capture the return of the call of isValid method
+    const validateSpy = jest.spyOn(validationStub, 'validate') // we capture the return of the call of validate method
 
     const httpRequest = makeFakeRequest()
 
     await sut.handle(httpRequest)
-    expect(validateSpy).toHaveBeenCalledWith(httpRequest.body) // we check if the isValidSpy return has been called with the given value
+    expect(validateSpy).toHaveBeenCalledWith(httpRequest.body) // we check if the validateSpy return has been called with the given value
     // toEqual checks only the value
   })
 
