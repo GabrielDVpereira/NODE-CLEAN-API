@@ -41,7 +41,7 @@ const makeFakeAuthentication = (): AuthenticationModel => ({
 })
 
 describe('DbAuthentication', () => {
-  test('Should vall LoadAccountByEmail with correct email', async () => {
+  test('Should call LoadAccountByEmail with correct email', async () => {
     const { sut, loadAccountByEmailRepositoryStub } = makeSut()
     const loadSpy = jest.spyOn(loadAccountByEmailRepositoryStub, 'load')
     await sut.auth(makeFakeAuthentication())
@@ -54,5 +54,13 @@ describe('DbAuthentication', () => {
     jest.spyOn(loadAccountByEmailRepositoryStub, 'load').mockReturnValueOnce(Promise.reject(new Error()))
     const promise = sut.auth(makeFakeAuthentication())
     await expect(promise).rejects.toThrow()
+  })
+
+  test('Should reuturn null if LoadAccountEmailRepository returns null', async () => {
+    const { sut, loadAccountByEmailRepositoryStub } = makeSut()
+    jest.spyOn(loadAccountByEmailRepositoryStub, 'load').mockReturnValue(null)
+    const accessToken = await sut.auth(makeFakeAuthentication())
+
+    expect(accessToken).toBeNull()
   })
 })
