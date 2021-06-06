@@ -8,22 +8,12 @@ import {
 } from './db-authentication-protocols'
 
 export class DbAuthentication implements Authentication {
-  private readonly loadAccountByEmailRepository: LoadAccountByEmailRepository
-  private readonly hashComparer: HashComparer
-  private readonly encrypter: Encrypter
-  private readonly updateAccessTokenRepository: UpdateAccessTokenRepository
-
   constructor (
-    loadAccountByEmailRepository: LoadAccountByEmailRepository,
-    updateAccessTokenRepository: UpdateAccessTokenRepository,
-    hashComparer: HashComparer,
-    encrypter: Encrypter
-  ) {
-    this.loadAccountByEmailRepository = loadAccountByEmailRepository
-    this.hashComparer = hashComparer
-    this.encrypter = encrypter
-    this.updateAccessTokenRepository = updateAccessTokenRepository
-  }
+    private readonly loadAccountByEmailRepository: LoadAccountByEmailRepository,
+    private readonly updateAccessTokenRepository: UpdateAccessTokenRepository,
+    private readonly hashComparer: HashComparer,
+    private readonly encrypter: Encrypter
+  ) {} // the same as declarating the vars on top of the class and assigning to it in the constructor
 
   async auth (authentication: AuthenticationModel): Promise<string> {
     const account = await this.loadAccountByEmailRepository.loadByEmail(authentication.email)

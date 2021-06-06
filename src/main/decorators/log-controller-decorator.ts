@@ -10,13 +10,8 @@ import { Controller, HttpRequest, HttpResponse } from '../../presentation/protoc
  */
 
 export class LoggerControllerDecorator implements Controller {
-  private readonly controller: Controller
-  private readonly logErrorRepository
-
-  constructor (controller: Controller, logErrorRepository: LogErrorRepository) {
-    this.controller = controller
-    this.logErrorRepository = logErrorRepository
-  }
+  constructor (private readonly controller: Controller,
+    private readonly logErrorRepository: LogErrorRepository) {} // the same as declarating the vars on top of the class and assigning to it in the constructor
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     const httpResponse = await this.controller.handle(httpRequest)

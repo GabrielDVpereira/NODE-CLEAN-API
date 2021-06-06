@@ -13,13 +13,10 @@ import {
 } from '../../helpers/http/http-helpers'
 
 export class SignUpController implements Controller { // by making the class implement a controller interface, we ensure that all controllers will follow the controller methods we define
-  private readonly addAccount: AddAccount // private - it's not acessible outside the class; read-only - it cannot be reasigned
-  private readonly validation: Validation
-
-  constructor (addAccount: AddAccount, validation: Validation) { // dependecy inversion (Inversion of Control) as well as dependency injection. we have controll of the emailValidator dependencies (methods) by injecting it into the SignUpController class
-    this.addAccount = addAccount
-    this.validation = validation
-  }
+  constructor (
+    private readonly addAccount: AddAccount,
+    private readonly validation: Validation) { // dependecy inversion (Inversion of Control) as well as dependency injection. we have controll of the emailValidator dependencies (methods) by injecting it into the SignUpController class
+  } // the same as declarating the vars on top of the class and assigning to it in the constructor
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
