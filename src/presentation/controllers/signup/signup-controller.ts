@@ -4,7 +4,7 @@ import {
   HttpResponse,
   AddAccount,
   Validation
-} from './signup-protocols'
+} from './signup-controller-protocols'
 
 import {
   badRequest,
