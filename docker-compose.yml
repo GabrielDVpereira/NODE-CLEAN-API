@@ -1,0 +1,23 @@
+version: '3'
+
+services: 
+  api:
+    restart: always
+    build: .
+    command: yarn start
+    links: 
+      - mongo
+    depends_on: 
+      - mongo
+    ports: 
+      - "5050:5050"
+    volumes: 
+      - .:/usr/src/clean-node-api/
+      - /usr/src/clean-node-api/node_modules
+  mongo:
+    restart: always 
+    image: mongo:4.2.9-bionic
+    ports:
+      - '27017:27017'
+    volumes:
+      - ./mongo:/data/db
