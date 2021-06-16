@@ -4,13 +4,14 @@ services:
   api:
     restart: always
     build: .
-    command: yarn start
+    command: yarn debug
     links: 
       - mongo
     depends_on: 
       - mongo
     ports: 
       - "5050:5050"
+      - "9222:9222"
     volumes: 
       - .:/usr/src/clean-node-api/
       - /usr/src/clean-node-api/node_modules

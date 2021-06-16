@@ -2,8 +2,9 @@
   "compilerOptions": {
     "outDir": "dist",
     "module": "commonjs",
-    "target": "ES2019",
-    "esModuleInterop": true
+    "target": "es2019",
+    "esModuleInterop": true, 
+    "sourceMap": true
   },
   "include": [
     "src"
