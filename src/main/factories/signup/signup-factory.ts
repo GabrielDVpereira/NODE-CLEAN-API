@@ -6,14 +6,19 @@ import { AccountMongoRepository } from '../../../infra/db/mongodb/account/accoun
 import { Controller } from '../../../presentation/protocols'
 import { LoggerControllerDecorator } from '../../decorators/log-controller-decorator'
 import { makeSignUpValidation } from './signup-validation-factory'
+import { DbAuthentication } from '../../../data/usecases/authentication/db-authentication'
+import { JwtAdapter } from '../../../infra/criptography/jwt-adapter/jwt.adapter'
+import env from '../../config/env'
 
 export const makeSignUpController = (): Controller => {
   const salt = 12
-  const bcryptAdater = new BcryptAdapter(salt)
+  const bcryptAdapter = new BcryptAdapter(salt)
   const accountMongoRepository = new AccountMongoRepository()
-  const dbAddAccount = new DbAddAccount(bcryptAdater, accountMongoRepository)
+  const dbAddAccount = new DbAddAccount(bcryptAdapter, accountMongoRepository)
   const validationComposite = makeSignUpValidation()
-  const signUpController = new SignUpController(dbAddAccount, validationComposite)
+  const jwtAdapter = new JwtAdapter(env.jwtSecret)
+  const dbAuthentication = new DbAuthentication(accountMongoRepository, accountMongoRepository, bcryptAdapter, jwtAdapter)
+  const signUpController = new SignUpController(dbAddAccount, validationComposite, dbAuthentication)
   const logErrorRepository = new LogMongoRepository()
   return new LoggerControllerDecorator(signUpController, logErrorRepository) // we use decorator to exteds a controller implementation of handle to use logger functionality
 }
