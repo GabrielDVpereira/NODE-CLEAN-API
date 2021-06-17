@@ -8,10 +8,12 @@ import {
 
 import {
   badRequest,
+  forbidden,
   ok,
   serverError
 } from '../../helpers/http/http-helpers'
 import { Authentication } from '../login/login-controller-protocols'
+import { EmailInUseError } from '../../errors'
 
 export class SignUpController implements Controller { // by making the class implement a controller interface, we ensure that all controllers will follow the controller methods we define
   constructor (
@@ -27,11 +29,15 @@ export class SignUpController implements Controller { // by making the class imp
         return badRequest(error)
       }
       const { name, email, password } = httpRequest.body
-      await this.addAccount.add({
+      const account = await this.addAccount.add({
         name,
         email,
         password
       })
+
+      if (!account) {
+        return forbidden(new EmailInUseError())
+      }
 
       const accessToken = await this.authentication.auth({
         email, password
