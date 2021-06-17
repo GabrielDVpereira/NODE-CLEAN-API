@@ -3,23 +3,36 @@ import { AddAccount, AddAccountModel, AccountModel, Validation } from './signup-
 import { MissingParamError, ServerError } from '../../errors'
 import { HttpRequest } from '../../protocols'
 import { ok, serverError, badRequest } from '../../helpers/http/http-helpers'
+import { Authentication, AuthenticationModel } from '../login/login-controller-protocols'
 
 interface SutTypes {
   sut: SignUpController
   addAccountStub: AddAccount
   validationStub: Validation
+  authenticationStub: Authentication
 }
 
 const makeSut = (): SutTypes => { // factory to implement only once the class instancication
   const addAccountStub = makeAddAccount()
   const validationStub = makeValidation()
-  const sut = new SignUpController(addAccountStub, validationStub) // dependency injection
+  const authenticationStub = makeAutentication()
+  const sut = new SignUpController(addAccountStub, validationStub, authenticationStub) // dependency injection
 
   return {
     sut,
     addAccountStub,
-    validationStub
+    validationStub,
+    authenticationStub
   }
+}
+const makeAutentication = (): Authentication => {
+  class AuthenticationStub implements Authentication {
+    async auth (authentication: AuthenticationModel): Promise<string> {
+      return Promise.resolve('any_token')
+    }
+  }
+
+  return new AuthenticationStub()
 }
 
 const makeAddAccount = (): AddAccount => {
@@ -54,7 +67,7 @@ const makeFakeAccount = (): AccountModel => ({
 
 const makeFakeRequest = (): HttpRequest => ({
   body: {
-    email: 'any_any_email@test.com',
+    email: 'any_email@test.com',
     name: 'any_name',
     password: 'any_password',
     passwordConfirmation: 'any_password'
@@ -83,7 +96,7 @@ describe('SignUp Controller', () => {
 
     await sut.handle(httpRequest)
     expect(addSpy).toHaveBeenCalledWith({
-      email: 'any_any_email@test.com',
+      email: 'any_email@test.com',
       name: 'any_name',
       password: 'any_password'
     }) // we check if the isValidSpy return has been called with the given value
@@ -95,7 +108,7 @@ describe('SignUp Controller', () => {
 
     const httpRequest = makeFakeRequest()
     const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual(ok(makeFakeAccount()))
+    expect(httpResponse).toEqual(ok({ accessToken: 'any_token' }))
   })
 
   test('Should call validator with correct value', async () => {
@@ -117,5 +130,21 @@ describe('SignUp Controller', () => {
     const httpRequest = makeFakeRequest()
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(badRequest(new MissingParamError('any_field')))
+  })
+
+  test('Should call authentication with correct values', async () => {
+    const { sut, authenticationStub } = makeSut()
+    const authSpy = jest.spyOn(authenticationStub, 'auth')
+    const httpRequest = makeFakeRequest()
+    await sut.handle(httpRequest)
+    expect(authSpy).toHaveBeenCalledWith({ email: 'any_email@test.com', password: 'any_password' })
+  })
+
+  test('Should return 500 if authentication throws', async () => {
+    const { sut, authenticationStub } = makeSut()
+    jest.spyOn(authenticationStub, 'auth').mockReturnValueOnce(Promise.reject(new Error()))
+    const httpRequest = makeFakeRequest()
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })
