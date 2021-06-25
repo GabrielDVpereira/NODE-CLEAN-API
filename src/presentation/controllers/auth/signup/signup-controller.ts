@@ -11,9 +11,9 @@ import {
   forbidden,
   ok,
   serverError
-} from '../../helpers/http/http-helpers'
+} from '../../../helpers/http/http-helpers'
 import { Authentication } from '../login/login-controller-protocols'
-import { EmailInUseError } from '../../errors'
+import { EmailInUseError } from '../../../errors'
 
 export class SignUpController implements Controller { // by making the class implement a controller interface, we ensure that all controllers will follow the controller methods we define
   constructor (
