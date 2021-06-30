@@ -1,9 +1,9 @@
-import { EmailValidation, CompareFieldsValidation, RequiredFieldValidation, ValidationComposite } from '../../../../validation/validators'
-import { Validation } from '../../../../presentation/protocols/validation'
-import { EmailValidator } from '../../../../validation/protocols/email-validator'
+import { EmailValidation, CompareFieldsValidation, RequiredFieldValidation, ValidationComposite } from '../../../../../validation/validators'
+import { Validation } from '../../../../../presentation/protocols/validation'
+import { EmailValidator } from '../../../../../validation/protocols/email-validator'
 import { makeSignUpValidation } from './signup-validation-factory'
 
-jest.mock('../../../../validation/validators/validation-composite') // we mock this path, so when anyone calls this, will get a mocked result
+jest.mock('../../../../../validation/validators/validation-composite') // we mock this path, so when anyone calls this, will get a mocked result
 
 const makeEmailValidator = (): EmailValidator => {
   class EmailValidatorStub implements EmailValidator { // stub is a mock for a test, we always return the value we expect from a method. We also implements a interface to ensure that the validator respects the protocol for validator
