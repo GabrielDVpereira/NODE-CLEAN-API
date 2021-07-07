@@ -1,4 +1,7 @@
 # Clean Node Api 
+[![Coverage Status](https://coveralls.io/repos/github/GabrielDVpereira/NODE-CLEAN-API/badge.svg?branch=master)](https://coveralls.io/github/GabrielDVpereira/NODE-CLEAN-API?branch=master)
+
+[![Build Status](https://www.travis-ci.com/GabrielDVpereira/NODE-CLEAN-API.svg?branch=master)](https://www.travis-ci.com/GabrielDVpereira/NODE-CLEAN-API)
 
 this is a practice project that implemets knowledges taken from the Node clean Archtecture course from Rodrigo Manguinho
 
