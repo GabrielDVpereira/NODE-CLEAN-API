@@ -1,4 +1,4 @@
-import { HttpRequest, Middleware } from '../../presentation/protocols'
+import { HttpRequest, Middleware } from '@/presentation/protocols'
 import { NextFunction, Request, Response } from 'express'
 
 // adapter to adapt the response of express to the controller we're using

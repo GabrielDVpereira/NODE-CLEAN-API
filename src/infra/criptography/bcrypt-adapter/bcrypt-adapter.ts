@@ -1,6 +1,6 @@
-import { Hasher } from '../../../data/protocols/criptography/hasher'
+import { Hasher } from '@/data/protocols/criptography/hasher'
 import bcrypt from 'bcrypt'
-import { HashComparer } from '../../../data/protocols/criptography/hash-comparer'
+import { HashComparer } from '@/data/protocols/criptography/hash-comparer'
 
 export class BcryptAdapter implements Hasher, HashComparer {
   constructor (private readonly salt: number) {} // the same as declarating the vars on top of the class and assigning to it in the constructor

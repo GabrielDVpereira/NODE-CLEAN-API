@@ -1,5 +1,5 @@
 import { Collection } from 'mongodb'
-import { MongoHelper } from '../helpers/mongo-helper'
+import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper'
 import { AccountMongoRepository } from './account-mongo-repository'
 
 // since we are testing a db integrated with a class, we cannot mock the mongodb functions because it's too painful, so we use a offline db helper and test only the sucess case

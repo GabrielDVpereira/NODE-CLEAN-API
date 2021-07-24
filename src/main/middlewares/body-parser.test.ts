@@ -1,7 +1,7 @@
 // it has .test because it's an integration test, we have a script in package.json only to run integration tests
 
 import request from 'supertest'
-import app from '../config/app'
+import app from '@/main/config/app'
 
 describe('Body Parser Middleware', () => {
   test('should parse body as json', async () => {

@@ -1,5 +1,5 @@
-import { LogErrorRepository } from '../../data/protocols/db/log/log-error-repository'
-import { Controller, HttpRequest, HttpResponse } from '../../presentation/protocols'
+import { LogErrorRepository } from '@/data/protocols/db/log/log-error-repository'
+import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
 
 /**
     This decorator implemets the Controller, which is the same interface from the Wrappee(class we want to decorate), this is important from a decorator because it we ensure that is follows the
