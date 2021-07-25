@@ -4,7 +4,7 @@ import { Validation } from '@/presentation/protocols/validation'
 import { badRequest, noContent, serverError } from '@/presentation/helpers/http/http-helpers'
 import MockDate from 'mockdate'
 
-interface SutTypes {
+type SutTypes = {
   sut: AddSurveyController
   validationStub: Validation
   addSurveyStub: AddSurvey

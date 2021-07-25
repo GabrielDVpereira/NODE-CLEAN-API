@@ -5,7 +5,7 @@ import { HttpRequest } from '@/presentation/protocols'
 import { ok, serverError, badRequest, forbidden } from '@/presentation/helpers/http/http-helpers'
 import { Authentication, AuthenticationModel } from '@/presentation/controllers/auth/login/login-controller-protocols'
 
-interface SutTypes {
+type SutTypes = {
   sut: SignUpController
   addAccountStub: AddAccount
   validationStub: Validation
